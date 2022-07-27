@@ -1,0 +1,157 @@
+<app-header-cust></app-header-cust>
+<div style="text-align: center; background-color: rgb(55, 180, 141); color: #fff;">
+  <h1><i>Welcome to The Citizens Bank</i></h1>
+</div>
+
+<br>
+<div style="background-color: rgb(205, 212, 212);">
+<div style="text-align:center;">
+  <h2>Customer Details</h2>
+  <br>
+</div>
+<div class="container">
+  <table cellpadding="5" class="table table-striped" id="table1">
+    <tr>
+      <th>CUSTOMER ID</th>
+      <th>CUSTOMER NAME</th>
+      <th>DOB</th>
+      <th>PAN</th>
+      <th>ADDRESS</th>
+      <th>ACCOUNTS</th>
+    </tr>
+    <tr>
+      <td>{{customerValue.userid}}</td>
+      <td>{{customerValue.username}}</td>
+      <td>{{customerValue.dateOfBirth}}</td>
+      <td>{{customerValue.pan}}</td>
+      <td>{{customerValue.address}}</td>
+      <td>
+        <table cellpadding="5" id="table2" class="table-striped">
+          <tr>
+            <th>ACCOUNT ID</th>
+            <th>CURRENT BALANCE</th>
+            <th>ACCOUNT TYPE</th>
+            <th>OWNER NAME</th>
+          </tr>
+          <tr *ngFor="let account of customerValue.accounts">
+            <td>{{account.accountId}}</td>
+            <td>{{account.currentBalance}}</td>
+            <td>{{account.accountType}}</td>
+            <td>{{account.ownerName}}</td>
+          </tr>
+        </table>
+      </td>
+
+    </tr>
+  </table>
+</div>
+</div>
+<br>
+<div style="text-align: center;">
+  <h2>Transaction Details</h2>
+  <br>
+  <form>
+    <div>
+      <select name="accId" [ngModel]="accId" (ngModelChange)="onSelectedChange($event)" class="select">
+        <option *ngFor="let account of customerValue.accounts">{{account.accountId}}
+        </option>
+      </select>
+      <button class="btn btn-info" type="button" (click)="onDisplay()" style="margin:5px;"> Submit </button>
+    </div>
+  </form>
+  <div class="container" *ngIf="display">
+    <table class="table table-striped">
+      <tr>
+        <th>sourceAccountId</th>
+        <th>sourceOwnerName</th>
+        <th>targetAccountId</th>
+        <th>targetOwnerName</th>
+        <th>amount</th>
+        <th>initiationDate</th>
+        <th>reference</th>
+      </tr>
+      <tr *ngFor="let transaction of transactions">
+        <td>{{transaction.sourceAccountId}}</td>
+        <td>{{transaction.sourceOwnerName}}</td>
+        <td>{{transaction.targetAccountId}}</td>
+        <td>{{transaction.targetOwnerName}}</td>
+        <td>{{transaction.amount}}</td>
+        <td>{{transaction.initiationDate}}</td>
+        <td>{{transaction.reference}}</td>
+      </tr>
+    </table>
+  </div>
+</div>
+<div class="row container justify-content-around">
+
+  <div class="col-xs-12 col-sm-6 col-md-4">
+    <div style="margin: 10em 0em 0em 0em;">
+      <div class="card bg-dark text-white" style="width: 500px; background-color: #f3d8d8">
+        <img alt="" class="card-img-top" src="../../assets/images/withdraw-money.jpg" style="height:450px">
+        <div class="card-body">
+          <h4 class="card-title" style="text-align: center;">Withdraw Amount</h4>
+          <form #details="ngForm">
+            <label>From Account:</label>
+            <div style="float: right;">
+            <select id="aId" name="aId" [ngModel]="aId" #acctId="ngModel">
+              <option *ngFor="let account of customerValue.accounts"> {{account.accountId}} </option>
+            </select>
+          </div>
+            <label></label><br>
+            <label>Enter the Amount to Withdraw:</label>
+            <div style="float: right;">
+            <input type="number" name="amount" placeholder="Enter the amount" min="100" ngModel #amount="ngModel" />
+            <input type="hidden" name="reference" value="withdraw" />
+          </div>
+            <br> <br> <div style="text-align: center; margin: 10px 0;" ><button type="submit" name="View" class="btn btn-primary" (click)="onWithdraw(details) ">Withdraw
+              Amount</button></div>
+            <div *ngIf="withdrawmsg">
+              <p class="text-white" id="message">{{withdrawmsg}}</p>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-xs-12 col-sm-6 col-md-4">
+    <div style="margin: 10em 0em 10em 10em;">
+      <div class="card bg-dark text-white" style="width: 650px; background-color: #f3d8d8">
+        <img alt="" class="card-img-top" src="../../assets/images/transfer-money.jpg" style="height:450px">
+        <div class="card-body">
+          <h4 class="card-title" style="text-align: center;">Transfer Amount</h4>
+          <form #value="ngForm">
+            <label>From Account: </label>
+            <div style="float: right;">
+            <select id="accountid" name="accountid" [ngModel]="accountid" #accountid="ngModel">
+              <option *ngFor="let account of customerValue.accounts"> {{account.accountId}} </option>
+            </select>
+          </div>
+            <br>
+            <label>Enter the Target Account No: </label>
+            <div style="float: right;">
+            <input type="number" name="targetAccount" placeholder="Enter the Target Account ID" ngModel
+              #targetAccount="ngModel" />
+            </div>
+
+            <br>
+            <label>Enter the Amount to Transfer: </label>
+            <div style="float: right;">
+            <input type="number" name="amount" placeholder="Enter the amount" min="100" ngModel #amount="ngModel" />
+            <input type="hidden" name="reference" value="transfer" />
+          </div>
+            <br> <div style="text-align: center; "><button type="button" (click)="onTransfer(value)" name="View" class="btn btn-primary"
+              [disabled]="!value.valid">Transfer Amount</button></div>
+          </form>
+          <div *ngIf="transfermsg">
+            <p class="text-white" id="message">{{transfermsg}}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<footer>
+  <div style=" margin-bottom: -22px; background-color: #525252; text-align: center; color: #fff; padding: 15px 0 1px 0;">
+    <p>&copy; CTS INTCDE22IJ066 POD-4</p>
+  </div>
+</footer>
